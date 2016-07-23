@@ -1,37 +1,66 @@
 <?php
-header('Content-type: text/html; charset=utf-8');
-include_once("mysql.php");
-$Table="file";
-$Table2="user";
-$Table3="gone";
-session_start();
+header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
+include_once("mysql.php");                          // 連結資料庫new
+$Table="file";      // 取file資料表(影響：delete按鈕，no按鈕)
+$Table2="user";     // 取user資料表(影響：edit按鈕)
+$Table3="file2";    // 取file2資料表(影響：delete按鈕，no按鈕)
 
+session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION["ds"])
 
-if(!empty($_POST['word']))      // Edit send      
+// 如果有規劃資料
+if(!empty($_POST['word']))
 {
-    $word = $_POST['word'];
-    $word = ereg_replace("\n", "<br />\n", $word);
-    $sql = "UPDATE $Table2 SET edit ='$word'
-            WHERE username='{$_SESSION['userName']}'";
-    mysqli_query($conn,$sql);
-}
-
-if(($_GET['del'])!=""){         // Delete button click
-    $sql = "UPDATE $Table SET additem=0
-                    WHERE dnum='{$_GET['del']}' AND username='{$_SESSION['userName']}'";
-    mysqli_query($conn,$sql);
+    $word = ereg_replace("\n", "<br />\n", $_POST['word']); // 將換行轉成資料庫存取的換行符號
     
-    $numdel=mysqli_affected_rows($conn);
-}
-
-if(($_GET['gone'])!=""){      // GoneDelete button click
-    $sql = "DELETE FROM $Table3 
-            WHERE username='{$_SESSION['userName']}'
-            AND dname='{$_GET['gone']}'";
+    // 修改的是Taichung的規劃資料
+    if($_GET['plan']==0)
+        //更新Taichung的規劃資料
+        $sql = "UPDATE $Table2 SET edit ='$word'
+                WHERE username='{$_SESSION['userName']}'";
+    // 修改的是Tainan的規劃資料
+    else
+        //更新Tainan的規劃資料
+        $sql = "UPDATE $Table2 SET edit2 ='$word'
+                WHERE username='{$_SESSION['userName']}'";
     mysqli_query($conn,$sql);
-    header("Location:achievement.php");
+    header('Location:travel.php');      // 跳轉頁面(travel.php)
 }
 
-header('Location:travel.php');
+
+// 點選"delete按鈕"
+if(($_GET['del'])!="")
+{
+    // 如果點選"Taichung按鈕"
+    if($_SESSION['ds']=="0")
+        // 將file的additem欄位更改為0(刪除加入景點)
+        mysqli_query($conn,$sql = "UPDATE $Table SET additem=0
+                                    WHERE dnum='{$_GET['del']}' 
+                                    AND username='{$_SESSION['userName']}'");
+    // 如果點選"Tainan按鈕"
+    if($_SESSION['ds']=="1") 
+        // 將file2的additem欄位更改為0(刪除加入景點)
+        mysqli_query($conn,"UPDATE $Table3 SET additem=0
+                            WHERE dnum='{$_GET['del']}' 
+                            AND username='{$_SESSION['userName']}'");
+    header('Location:travel.php');      // 跳轉頁面(travel.php)
+}
+
+// 點選"no按鈕"
+if(($_GET['gone'])!="")
+{ 
+    // 如果點選"Taichung按鈕"
+    if($_SESSION['ds']=="0")
+        // 將file的gone欄位更改為0(刪除已去景點)
+        mysqli_query($conn,"UPDATE $Table SET gone=0
+                            WHERE dname='{$_GET['gone']}' 
+                            AND username='{$_SESSION['userName']}'");
+    // 如果點選"Tainan按鈕"
+     if($_SESSION['ds']=="1")
+        // 將file2的gone欄位更改為0(刪除已去景點)
+        mysqli_query($conn,"UPDATE $Table3 SET gone=0
+                            WHERE dname='{$_GET['gone']}' 
+                            AND username='{$_SESSION['userName']}'");
+    header("Location:achievement.php");     // 跳轉頁面(achievement.php)
+}
 ?>
 

@@ -1,6 +1,7 @@
 <?php
-session_start();
+session_start();  // 啟動session(使用：$_SESSION['userName'])
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,8 +32,9 @@ session_start();
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav">
       <div class="container">
         
+        <!-- 顯示使用者名稱 -->
         <a class="navbar-brand active"><h2><?php echo $_SESSION['userName'];?></h2></a>
-            <!-- Nav Starts -->
+            
             <div class="navbar-collapse  collapse">
               <ul class="nav navbar-nav navbar-right">
                 
@@ -45,22 +47,24 @@ session_start();
                
               </ul>
             </div>
-            <!-- #Nav Ends -->
+            
       </div>
      </div>
    </div>
 </div>
+<h1>1</h1>
 <!-- Header Ends -->
 
-<h1>1</h1>
 
-<!-- Input Starts -->
+<!-- Enter Starts -->
 <div id="contact" class="mail">
   <div class="container contactform center">
-  <h2 class="text-center  wowload fadeInUp">Say Something ...</h2>
+    
+    <!-- 顯示"Please Say Something" -->
+    <h2 class="text-center  wowload fadeInUp">Say Something ...</h2>
     <div class="row wowload fadeInLeftBig">      
       <div class="col-sm-6 col-sm-offset-3 col-xs-12"> 
-        
+        <!-- 顯示留言畫面 -->
         <form method="post" action="contact.php">
           <input type="text" placeholder="Name" name="name" required>
           <textarea rows="5" placeholder="Your words" name="word"  required></textarea>
@@ -72,7 +76,7 @@ session_start();
     </div>
   </div>
 </div>
-<!-- Input Ends -->
+<!-- Enter Ends -->
 
 </body>
 </html>

@@ -1,21 +1,21 @@
 <?php
-include("mysql.php");
-$Table="talk";
+header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
+include_once("mysql.php");                          // 連結資料庫new
+$Table="talk";    // 取talk資料表(影響：留言send按鈕)
 
-if (!empty($_POST['name']) && !empty($_POST['word'])){    // Input Button click
-  date_default_timezone_set('Asia/Taipei');    
-  $stmt = mysqli_prepare($conn,      
-               "INSERT $Table (`name`, `word`, `time`)VALUES (?, ?, ?)");
-  $now = date("Y-m-d H:i:s");
-
-  mysqli_stmt_bind_param($stmt, 'sss',$_POST['name'], $_POST['word'], $now);
-  mysqli_stmt_execute($stmt);
+// 點選"留言send"按鈕(如果名字和留言內容非空值)
+if (!empty($_POST['name']) && !empty($_POST['word']))
+{    
+  date_default_timezone_set('Asia/Taipei');   //時間設定:Taipei時間 
+  $now = date("Y-m-d H:i:s");                 //時間設定(年、月、日 時、分、秒)
+  
+  // 新增留言
+  mysqli_query($conn,"INSERT $Table (name,word,time)
+                      VALUES ('{$_POST['name']}', '{$_POST['word']}', $now)");
 }
 
-session_start();
-$result=mysqli_query($conn,"SELECT * FROM $Table ORDER BY num DESC");
-$numwords = mysqli_num_rows($result);
-
+$result=mysqli_query($conn,"SELECT * FROM $Table ORDER BY num DESC");   //從talk資料表最新資料開始取
+$numwords = mysqli_num_rows($result);   //總留言數
 ?>
 
 <!DOCTYPE html>
@@ -33,9 +33,7 @@ $numwords = mysqli_num_rows($result);
 <link rel="stylesheet" href="assets/gallery/blueimp-gallery.min.css">
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-
 <link rel="stylesheet" href="assets/style.css">
-
 </head>
 
 
@@ -48,8 +46,9 @@ $numwords = mysqli_num_rows($result);
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav">
       <div class="container">
         
+        <!-- 顯示使用者名稱 -->
         <a class="navbar-brand active"><h2><?php echo $_SESSION['userName'];?></h2></a>
-            <!-- Nav Starts -->
+            
             <div class="navbar-collapse  collapse">
               <ul class="nav navbar-nav navbar-right">
                 
@@ -62,44 +61,42 @@ $numwords = mysqli_num_rows($result);
                
               </ul>
             </div>
-            <!-- #Nav Ends -->
+            
       </div>
      </div>
    </div>
 </div>
+<h1>1</h1>
 <!-- Header Ends -->
 
-<h1>1</h1>
 
 <!--Forum Starts -->
 <div class="container contactform center">
+<!-- 顯示"Say Something" -->
 <h2 class="text-center  wowload fadeInUp">Say Something ...</h2>
-
+<!-- 顯示總留言數 -->
 <h4><?php echo "Total：$numwords messages "; ?></h4>
+<!-- 顯示我想留言 -->
 <h4 class="text-right  wowload fadeInUp"><a href="contact_send.php">I want say something...</a></h4>
 
 <?php
-if ($numwords>0) {
-  echo '<form cols="35" rows="7" >';
-  echo '<ul>';
-  $i=1;
-  while ($row = mysqli_fetch_array($result))
+echo '<form cols="35" rows="7" >
+      <ul>';
+
+//印出每筆留言
+while ($row = mysqli_fetch_array($result))
   {
-    $name=htmlspecialchars($row['name'], ENT_QUOTES);
-    $word=htmlspecialchars($row['word'], ENT_QUOTES);
-    $word=str_replace('  ', '&nbsp;&nbsp;', nl2br($word));
-   
-    echo "
-    <li text-align: center><p><h5><strong>$name</strong>
-	      <em>({$row['time']})</em></h5></p>
-		  <div class='text-center  wowload fadeInUp'><p><h5>$word</h5></p></div></li>";
-    $i++;
+    echo "<li text-align: center>
+          <p><h5><strong>{$row['name']}</strong>";      // 印出名字
+	  echo " <em>({$row['time']})</em></h5></p>";         // 印出時間
+		echo "<div class='text-center  wowload fadeInUp'>
+		        <p><h5>{$row['word']}</h5></p>
+		        </div>
+		      </li>";         // 印出留言
   }
   echo '</ul>';
   echo '</form>';
-}
 ?>
-
 </div>
 <!--Forum Ends -->
 

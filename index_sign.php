@@ -1,40 +1,41 @@
 <?php 
-header('Content-type: text/html; charset=utf-8');
-include_once("mysql.php");
-$Table="user";
+header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
+include_once("mysql.php");                          // 連結資料庫new
+$Table="user";      // 取user資料表(影響：signup按鈕)
 
-session_start();
-if (isset($_SESSION["userName"]))
-  $sUserName = $_SESSION["userName"];
-else 
-  $sUserName = "Guest";
-
-if (isset($_POST["signin"]))    // Signin button click
+// 點選"signup按鈕"
+if (isset($_POST["signup"]))    
 {
+  // 檢查user資料表內是否有與輸入的username相符的資料
 	$result=mysqli_query($conn,"SELECT * FROM $Table 
-	                      WHERE username ='{$_POST['newtxtUserName']}'");
+	                            WHERE username ='{$_POST['newtxtUserName']}'");
 	$row = mysqli_fetch_array($result);
-
-	if (mysqli_num_rows($result)>0)
+  
+  // 如果有與輸入的username相符的資料
+	if (mysqli_num_rows($result)>0)                         
 	{
-	  if($row['userpassword']==$_POST['newtxtPassword'])  // Already a member
+	  // 如果輸入的userpassword也相符
+	  if($row['userpassword']==$_POST['newtxtPassword'])    
 	  {
-  		header("Location: index.php?id=3");
-  		exit();
+  		header("Location: index.php?id=3");   // 跳轉回頁面index.php，傳id=3值，顯示你本來就是會員
+  		exit();                               // 離開php程式
 	  }
-	  else    // Change username
+	  // 如果輸入的userpassword不相符
+	  else    
 	  {
-	    header("Location: index_sign.php?id=4");
-		  exit();
+	    header("Location: index_sign.php?id=4");    // 跳轉回原頁面(index_sign.php)，傳id=4值，顯示帳號名已被使用
+  		exit();                                     // 離開php程式
 	  }
 	}
-	else    // Succeed
+	// 如果沒有與輸入的username相符的資料
+	else    
 	  {
+	    // 新增輸入的username和userpassword至user資料表
 	    $sql="INSERT $Table(username,userpassword)
-	                      VALUES('{$_POST['newtxtUserName']}','{$_POST['newtxtPassword']}')";
+	          VALUES('{$_POST['newtxtUserName']}','{$_POST['newtxtPassword']}')";
       mysqli_query($conn,$sql);
-      header("Location: index.php?id=5");
-      exit();
+      header("Location: index.php?id=5");   // 跳轉回頁面index.php，傳id=5值，顯示現在是會員了
+  		exit();                               // 離開php程式
 	  }
 }
 ?>
@@ -55,7 +56,6 @@ if (isset($_POST["signin"]))    // Signin button click
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="assets/style.css">
-
 </head>
 
 
@@ -68,49 +68,51 @@ if (isset($_POST["signin"]))    // Signin button click
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav">
       <div class="container">
         
-         <a class="navbar-brand active" href="index_sign.php"><h2>Sign In</h2></a>
-        
-            <!-- Nav Starts -->
+         <!-- 尚未登入，顯示註冊連結 -->
+         <a class="navbar-brand active" href="index_sign.php"><h2>Sign Up</h2></a>
+
             <div class="navbar-collapse  collapse">
               <ul class="nav navbar-nav navbar-right">
                 
+                 <!-- 尚未登入前點選其他頁面的連結，傳id=1值給頁面index.php，顯示要先登入 -->
                  <li class="active"><a href="index.php">Home</a></li>
                  <li ><a href="index.php?id=1">View</a></li>
                  <li ><a href="index.php?id=1">My Travel</a></li>
-                 <li ><a href="index.php?id=1">My Ahievement</a></li>
+                 <li ><a href="index.php?id=1">My Achievement</a></li>
                  <li ><a href="index.php?id=1">Forum</a></li>
                  
               </ul>
             </div>
-            <!-- #Nav Ends -->
 
       </div>
      </div>
    </div>
 </div>
+<h1>1</h1>
 <!-- Header Ends -->
 
-<h1>1</h1>
 
-<!-- Signin Starts-->
+<!-- Signup Starts-->
 <div id="contact" class="mail">
-
   <div class="container contactform center">
-  
-    <h2 class="text-center  wowload fadeInUp">Please Sign In</h2>
+    
+    <!-- 顯示"Please Sign Up" -->
+    <h2 class="text-center  wowload fadeInUp">Please Sign Up</h2>
     <div class="row wowload fadeInLeftBig">      
-      <div class="col-sm-6 col-sm-offset-3 col-xs-12"> 
+      <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+        <!-- 顯示註冊畫面 --> 
         <form method="post" action="index_sign.php" >
           <input type="text" placeholder="Username" name="newtxtUserName" required>
           <input type="text"  placeholder="Password" name="newtxtPassword"  required>
           <button class="btn btn-primary" name="reset" type="reset">Clear</button>&nbsp;
-          &nbsp;<button class="btn btn-primary" name="signin" type="submit">Sign In</button> 
+          &nbsp;<button class="btn btn-primary" name="signup" type="submit">Sign Up</button> 
         </form>
       </div>
     </div>
     &nbsp;&nbsp;
     
-    <?php if ($_GET["id"]==4):?> <!-- Change username -->
+    <!-- 得id=4值，顯示帳號名已被使用 -->
+    <?php if ($_GET["id"]==4):?> 
       <h4 class="text-center  wowload fadeInUp">This name has already been used.</h4>
       <h4 class="text-center  wowload fadeInUp">Please change another.</h4>
     <?php endif; ?>
@@ -118,7 +120,7 @@ if (isset($_POST["signin"]))    // Signin button click
   
   </div>
 </div>
-<!-- Signin Ends-->
+<!-- Signup Ends-->
 
 </body>
 </html>

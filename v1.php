@@ -1,12 +1,16 @@
+
 <?php 
+/*
 header('Content-type: text/html; charset=utf-8');
 include_once("mysql.php");
 $Table="file";
 $Table2="dst";
 
+session_start();
+
 $result =mysqli_query($conn,"SELECT * FROM $Table 
                             WHERE additem='1'
-                            AND username='{$_COOKIE['userName']}'");
+                            AND username='{$_SESSION['userName']}'");
 $num =mysqli_num_rows($result);
 echo $num;
 
@@ -16,7 +20,8 @@ for ($i=0;$i<$num;$i++){
   array_push($arr,$row['dnum']);
 }
 print_r($arr) ;
-echo json_encode( $arr );
+json_encode($arr);
+*/
 ?>
 
 <!DOCTYPE html>
@@ -52,13 +57,13 @@ echo json_encode( $arr );
 <div id="map" style="width: 500px; height: 300px"></div>
 
 <script>
-
+/*
 var s= JSON.stringify(arr);
 alert(s);
-
+*/
 var neighborhoods = [
   {lat: 24.1378, lng: 120.683},
-  {lat: 24.1629, lng: 120.64},
+  {lat: 22.997116, lng: 120.641},
   {lat: 24.183596, lng: 120.610653},
   {lat: 24.17, lng: 120.63},
   {lat: 24.15, lng: 120.66},
@@ -89,7 +94,7 @@ function initMap() {
 function drop() {
   clearMarkers();
   for(i=0;i<s.length;i++){
-    addMarkerWithTimeout(neighborhoods[s[i]], i * 200,neighborhoods2[s[i]]);
+    addMarkerWithTimeout(neighborhoods[i], i * 200,neighborhoods2[i]);
   }
 }
 

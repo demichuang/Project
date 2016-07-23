@@ -1,19 +1,30 @@
 <?php
-header('Content-type: text/html; charset=utf-8');
-include_once("mysql.php");
-$Table="user";
+header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
+include_once("mysql.php");                          // 連結資料庫new
+$Table="user";  // user資料表(影響：edit按鈕)
 
-session_start();
-if(($_GET['edit'])!="")     // Edit button click
+session_start();    // 啟動session(使用：$_SESSION['userName'])
+
+//  點選Taichung Edit 按鈕
+if(($_GET['edit'])!="")     
 {
-  $result=mysqli_query($conn,"SELECT * FROM $Table WHERE username='{$_GET['edit']}'"); 
-  $row = mysqli_fetch_array($result);
-  $edit = $row['edit'];
-  $edit = ereg_replace("<br />", "", $edit);
+  // 從user資料表內取Taichung的規劃資料
+  $result=mysqli_query($conn,"SELECT * FROM $Table 
+                              WHERE username='{$_GET['edit']}'"); 
+  $row = mysqli_fetch_array($result);                 // 取每筆資料 
+  $edit = ereg_replace("<br />", "", $row['edit']);   // 消除資料內的換行符號
+  $plan = 0;                                          // 設$plan為0
 }
-else
+
+//  點選Tainan Edit 按鈕
+if(($_GET['edit2'])!="")     
 {
-  header("Location:p_e.php");
+  // 從user資料表內取Tainan的規劃資料
+  $result=mysqli_query($conn,"SELECT * FROM $Table 
+                              WHERE username='{$_GET['edit2']}'"); 
+  $row = mysqli_fetch_array($result);                 // 取每筆資料
+  $edit = ereg_replace("<br />", "", $row['edit2']);  // 消除資料內的換行符號
+  $plan = 1;                                          // 設$plan為1
 }
 ?>
 
@@ -47,8 +58,9 @@ else
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="top-nav">
       <div class="container">
         
+        <!-- 顯示使用者名稱 -->
         <a class="navbar-brand active"><h2><?php echo $_SESSION['userName'];?></h2></a>
-            <!-- Nav Starts -->
+            
             <div class="navbar-collapse  collapse">
               <ul class="nav navbar-nav navbar-right">
                 
@@ -61,7 +73,7 @@ else
                
               </ul>
             </div>
-            <!-- #Nav Ends -->
+            
       </div>
      </div>
    </div>
@@ -74,11 +86,13 @@ else
 <div id="contact" class="mail">
 
   <div class="container contactform center">
-   
+    
+    <!-- 顯示"Enter your words" -->
     <h2 class="text-center  wowload fadeInUp">Enter your words</h2>
     <div class="row wowload fadeInLeftBig">      
-      <div class="col-sm-6 col-sm-offset-3 col-xs-12"> 
-        <form method="post" action="travel_done.php" >
+      <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+        <!-- 顯示編輯畫面 --> 
+        <form method="post" action="travel_done.php?plan=<?php echo $plan?>" >
           <textarea rows="5" name="word"><?php echo $edit;?></textarea>
           <button class="btn btn-primary" name="reset" type="reset">Reset</button>&nbsp;
           &nbsp;<button class="btn btn-primary" name="signin" type="submit">Send</button> 
