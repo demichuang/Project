@@ -10,12 +10,24 @@ session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION[
 
 // 點選"Taichung按鈕"
 if(isset($_POST['taic']))
+{
    $_SESSION["ds"]=0;       // 設$_SESSION["ds"]為0
-
+    
+    $lat = 24.136914;       // 台中火車站經度
+    $lng = 120.685146;      // 台中火車站緯度
+    $mark = "台中火車站";   // 台中火車站標示
+    
+}
 
 // 點選"Tainan按鈕"  
-if(isset($_POST['tain']))   
+if(isset($_POST['tain']))
+{
    $_SESSION["ds"]=1;       // 設$_SESSION["ds"]為1
+    
+    $lat = 22.997117;       // 台南火車站經度
+    $lng = 120.212613;      // 台南火車站緯度
+    $mark = "台南火車站";   // 台南火車站標示
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +45,69 @@ if(isset($_POST['tain']))
 <link rel="stylesheet" href="assets/gallery/blueimp-gallery.min.css">
 <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-
 <link rel="stylesheet" href="assets/style.css">
+
+<!-- Map  -->
+<script>
+function initMap() 
+{
+    // 地圖中心位置
+    var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center:  new google.maps.LatLng('<?php echo $lat ?>','<?php echo $lng?>')
+    });
+    
+    // 地圖標記位置
+    var marker = new google.maps.Marker({
+    		position : new google.maps.LatLng('<?php echo $lat ?>','<?php echo $lng?>')
+    });
+		
+	marker.setMap(map);     // 標記設定
+
+	// 標記訊息顯示
+	var infowindow = new google.maps.InfoWindow({
+			content : '<?php echo $mark ?>'
+	});
+    
+    // 開啟地圖、標記
+	infowindow.open(map, marker);
+	// 將地址轉換成經緯度座標
+    var geocoder = new google.maps.Geocoder();
+  
+    // 點選Search按鈕，呼叫geocodeAddress function  
+    document.getElementById('submit').addEventListener('click', function() {
+        geocodeAddress(geocoder, map);
+    });
+}
+
+
+function geocodeAddress(geocoder, resultsMap) 
+{
+    // 取得得到的地址
+    var address = document.getElementById('address').value;
+    geocoder.geocode({'address': address}, function(results, status) {
+    
+    //  順利解析得到的地址，回傳地理編碼，印出新標記
+    if (status == google.maps.GeocoderStatus.OK) 
+    {
+        resultsMap.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+            map: resultsMap,
+            position: results[0].geometry.location
+        });
+    }
+    // 未順利找到該地址
+    else 
+    {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+    });
+}
+</script>
+
+<!-- API key--> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJHpvTDXyRQ_vf2DLT1tlFytkLSB2WbPQ&signed_in=true&callback=initMap"
+async defer></script>
 
 </head>
 
@@ -159,64 +232,12 @@ if(mysqli_num_rows($result)>0){
         <input id="submit" type="button" value="Search">
     </div>
     <!-- map picture-->
-    <div id="map" style="width: 500px; height: 300px"></div>
-<!-- Map Ends -->        
+    <div id="map" style="width: ˊ600px; height: 400px"></div>
   </div>
 </div>
 
+<!-- Map Ends --> 
 
-<script>
-function initMap() {
-    
-   
-    var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center:  new google.maps.LatLng(24.136918, 120.685148)
-    });
-    
-  
-    var marker = new google.maps.Marker({
-    		position : new google.maps.LatLng(24.136918, 120.685148)
-    });
-		
-	marker.setMap(map);
-
-	var infowindow = new google.maps.InfoWindow({
-			content : "Here!"
-	});
-
-	infowindow.open(map, marker);
-    var geocoder = new google.maps.Geocoder();
-  
-  
-    document.getElementById('submit').addEventListener('click', function() {
-        geocodeAddress(geocoder, map);
-    });
-}
-
-function geocodeAddress(geocoder, resultsMap) {
-    var address = document.getElementById('address').value;
-    geocoder.geocode({'address': address}, function(results, status) {
-    
-    if (status === google.maps.GeocoderStatus.OK) 
-    {
-        resultsMap.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: resultsMap,
-            position: results[0].geometry.location
-        });
-    } 
-    else 
-    {
-      alert('Geocode was not successful for the following reason: ' + status);
-    }
-    });
-}
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJHpvTDXyRQ_vf2DLT1tlFytkLSB2WbPQ&signed_in=true&callback=initMap"
-async defer></script>
-<!-- Map Ends -->
 
 </body>
 </html>
