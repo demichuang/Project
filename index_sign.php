@@ -2,6 +2,9 @@
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
 $Table_user="user";      // 取user資料表(影響：signup按鈕)
+$Table_dst="dst";        // 取dst資料表(影響：signup按鈕<-如果成功註冊才使用)
+$Table_file="file";      // 取file資料表(影響：signup按鈕<-如果成功註冊才使用)
+$Table_file2="file2";    // 取file2資料表(影響：signup按鈕<-如果成功註冊才使用)
 
 // 點選"signup按鈕"
 if (isset($_POST["signup"]))    
@@ -29,14 +32,33 @@ if (isset($_POST["signup"]))
 	}
 	// 如果沒有與輸入的username相符的資料
 	else    
+	{
+	  // 新增輸入的username和userpassword至user資料表
+    mysqli_query($conn,"INSERT $Table_user(username,userpassword)
+                        VALUES('{$_POST['newtxtUserName']}','{$_POST['newtxtPassword']}')");
+  
+    // 從dst資料表取Taichung景點名稱
+    $result=mysqli_query($conn,"SELECT * FROM $Table_dst 
+	                              WHERE d=1");
+	  // 幫新使用者新增Taichung景點名稱列表  
+	  while($row = mysqli_fetch_array($result))
 	  {
-	    // 新增輸入的username和userpassword至user資料表
-	    $sql="INSERT $Table_user(username,userpassword)
-	          VALUES('{$_POST['newtxtUserName']}','{$_POST['newtxtPassword']}')";
-      mysqli_query($conn,$sql);
-      header("Location: index.php?id=5");   // 跳轉回頁面index.php，傳id=5值，顯示現在是會員了
-  		exit();                               // 離開php程式
+	    mysqli_query($conn,"INSERT $Table_file(username,dnum,dname,additem,gone)
+	                        VALUES('{$_POST['newtxtUserName']}','{$row['dnum']}','{$row['dname']}',0,0)");
+    }
+    // 從dst資料表取Tainan景點名稱
+	  $result=mysqli_query($conn,"SELECT * FROM $Table_dst 
+	                                WHERE d=2");
+	  // 幫新使用者新增Tainan景點名稱列表 
+    while($row = mysqli_fetch_array($result))
+	  {
+	    mysqli_query($conn,"INSERT $Table_file2(username,dnum,dname,additem,gone)
+	                        VALUES('{$_POST['newtxtUserName']}','{$row['dnum']}','{$row['dname']}',0,0)");
 	  }
+
+    header("Location: index.php?id=5");   // 跳轉回頁面index.php，傳id=5值，顯示現在是會員了
+  	exit();                               // 離開php程式
+	}
 }
 ?>
 
