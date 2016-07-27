@@ -12,21 +12,25 @@ session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION[
 if(isset($_POST['tain']))
 {
    $_SESSION["ds"]=1;       // 設$_SESSION["ds"]為1
-    
-    $lat = 22.997117;       // 台南火車站經度
-    $lng = 120.212613;      // 台南火車站緯度
-    $mark = "台南火車站";   // 台南火車站標示
+   
+   //從dstaddress取Tainan的經緯度資料
+   $result3=mysqli_query($conn,"SELECT *FROM $Table_dstaddress 
+                                WHERE d=1");
 }
 // 點選"Taichung按鈕"
 else
 {
    $_SESSION["ds"]=0;       // 設$_SESSION["ds"]為0
-    
-    $lat = 24.136914;       // 台中火車站經度
-    $lng = 120.685146;      // 台中火車站緯度
-    $mark = "台中火車站";   // 台中火車站標示
-    
-}
+   
+   //從dstaddress取Taichung的經緯度資料
+   $result3=mysqli_query($conn,"SELECT *FROM $Table_dstaddress 
+                                WHERE d=0");
+}    
+
+$row3=mysqli_fetch_array($result3); // 取資料
+$lat = $row3['lat'];                // 取經度
+$lng = $row3['lng'];                // 取緯度
+$mark = $row3['mark'];              // 取標記
 ?>
 
 <!DOCTYPE html>
