@@ -1,9 +1,9 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table_file="file";                 // 取file資料表(影響：Taichung按鈕，Tainan按鈕)
-$Table_user="user";                 // 取user資料表(影響：delete按鈕)
-$Table_file2="file2";               // 取file2資料表(影響：Taichung按鈕，Tainan按鈕)
+$Table_file="file";                 // 取file資料表(影響：Taichung按鈕，Tainan按鈕，delete按鈕)
+$Table_user="user";                 // 取user資料表(影響：edit按鈕)
+$Table_file2="file2";               // 取file2資料表(影響：Taichung按鈕，Tainan按鈕，delete按鈕)
 $Table_dstaddress="dstaddress";     // 取dstaddress資料表(影響：map呈現中心點)
 
 session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION["ds"])
