@@ -1,23 +1,12 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="file";      // 取file資料表(影響：Taichung按鈕，Tainan按鈕)
-$Table2="user";     // 取user資料表(影響：delete按鈕)
-$Table3="file2";    // 取file2資料表(影響：Taichung按鈕，Tainan按鈕)
+$Table_file="file";      // 取file資料表(影響：Taichung按鈕，Tainan按鈕)
+$Table_user="user";     // 取user資料表(影響：delete按鈕)
+$Table_file2="file2";    // 取file2資料表(影響：Taichung按鈕，Tainan按鈕)
 
 session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION["ds"])
 
-
-// 點選"Taichung按鈕"
-if(isset($_POST['taic']))
-{
-   $_SESSION["ds"]=0;       // 設$_SESSION["ds"]為0
-    
-    $lat = 24.136914;       // 台中火車站經度
-    $lng = 120.685146;      // 台中火車站緯度
-    $mark = "台中火車站";   // 台中火車站標示
-    
-}
 
 // 點選"Tainan按鈕"  
 if(isset($_POST['tain']))
@@ -27,6 +16,16 @@ if(isset($_POST['tain']))
     $lat = 22.997117;       // 台南火車站經度
     $lng = 120.212613;      // 台南火車站緯度
     $mark = "台南火車站";   // 台南火車站標示
+}
+// 點選"Taichung按鈕"
+else
+{
+   $_SESSION["ds"]=0;       // 設$_SESSION["ds"]為0
+    
+    $lat = 24.136914;       // 台中火車站經度
+    $lng = 120.685146;      // 台中火車站緯度
+    $mark = "台中火車站";   // 台中火車站標示
+    
 }
 ?>
 
@@ -163,13 +162,13 @@ echo "    <h3>Your list：</h3>
 // 如果點選"Taichung按鈕"            
 if($_SESSION['ds']=="0")
     // 從file資料表內取username加入的景點的資料 
-    $result=mysqli_query($conn,"SELECT * FROM $Table 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file 
                                 WHERE username ='{$_SESSION['userName']}' 
                                 AND additem ='1'"); 
 // 如果點選"Tainan按鈕"
 else
     // 從file2資料表內取username加入的景點的資料 
-    $result=mysqli_query($conn,"SELECT * FROM $Table3 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file2 
                                 WHERE username ='{$_SESSION['userName']}' 
                                 AND additem ='1'"); 
 // 列出加入的景點名稱
@@ -197,7 +196,7 @@ if(mysqli_num_rows($result)>0){
             
         <?php
         // 從user資料表資料表內取與username對應的資料
-        $result2=mysqli_query($conn,"SELECT * FROM $Table2 
+        $result2=mysqli_query($conn,"SELECT * FROM $Table_user
                                     WHERE username='{$_SESSION['userName']}'");
         // 取每筆資料        
         while($row2 =mysqli_fetch_array($result2)){

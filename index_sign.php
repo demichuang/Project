@@ -1,13 +1,13 @@
 <?php 
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="user";      // 取user資料表(影響：signup按鈕)
+$Table_user="user";      // 取user資料表(影響：signup按鈕)
 
 // 點選"signup按鈕"
 if (isset($_POST["signup"]))    
 {
   // 檢查user資料表內是否有與輸入的username相符的資料
-	$result=mysqli_query($conn,"SELECT * FROM $Table 
+	$result=mysqli_query($conn,"SELECT * FROM $Table_user 
 	                            WHERE username ='{$_POST['newtxtUserName']}'");
 	$row = mysqli_fetch_array($result);
   
@@ -31,7 +31,7 @@ if (isset($_POST["signup"]))
 	else    
 	  {
 	    // 新增輸入的username和userpassword至user資料表
-	    $sql="INSERT $Table(username,userpassword)
+	    $sql="INSERT $Table_user(username,userpassword)
 	          VALUES('{$_POST['newtxtUserName']}','{$_POST['newtxtPassword']}')";
       mysqli_query($conn,$sql);
       header("Location: index.php?id=5");   // 跳轉回頁面index.php，傳id=5值，顯示現在是會員了

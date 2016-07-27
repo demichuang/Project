@@ -1,7 +1,7 @@
 <?php 
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="user";    // 取user資料表(影響：login按鈕)
+$Table_user="user";    // 取user資料表(影響：login按鈕)
 
 session_start();    // 啟動session(使用：$_SESSION['userName'])
 
@@ -27,7 +27,7 @@ if (isset($_POST["logout"]))
 if (isset($_POST["login"]))     
 {
 	// 檢查user資料表內是否有與輸入的username和userpassword相符的資料
-	$result=mysqli_query($conn,"SELECT * FROM $Table                     
+	$result=mysqli_query($conn,"SELECT * FROM $Table_user                     
 	                            WHERE username ='{$_POST['txtUserName']}'
 	                            AND userpassword='{$_POST['txtPassword']}'");  
 

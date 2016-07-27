@@ -1,9 +1,9 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="file";    // 取file資料表(影響：add按鈕，gone按鈕)
-$Table2="dst";    // 取dst資料表(影響：see more按鈕)
-$Table3="file2";  // 取file2資料表(影響：add按鈕，gone按鈕)
+$Table_file="file";     // 取file資料表(影響：add按鈕，gone按鈕)
+$Table_dst="dst";       // 取dst資料表(影響：see more按鈕)
+$Table_file2="file2";   // 取file2資料表(影響：add按鈕，gone按鈕)
 
 session_start();    // 啟動session(使用：$_SESSION['userName']，$_SESSION["see"]，$_SESSION["dst"])
 
@@ -33,7 +33,7 @@ if(($_GET['additem'])!="")
   if($_SESSION['dst']=="0")
   {
     // 從file資料表內取和景點編號($_GET['additem'])及username對應的資料
-    $result=mysqli_query($conn,"SELECT * FROM $Table 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file 
                                 WHERE dnum='{$_GET['additem']}' 
                                 AND username='{$_SESSION['userName']}'");
     $row = mysqli_fetch_array($result);
@@ -42,7 +42,7 @@ if(($_GET['additem'])!="")
     if($row['additem']=="0")
     {
         // 將file的additem欄位更改為1(加入景點)
-        $sql = "UPDATE $Table SET additem=1
+        $sql = "UPDATE $Table_file SET additem=1
                 WHERE dnum='{$_GET['additem']}' 
                 AND username='{$_SESSION['userName']}'";
         mysqli_query($conn,$sql);
@@ -52,7 +52,7 @@ if(($_GET['additem'])!="")
   else
   {
     // 從file2資料表內和景點編號($_GET['additem'])及username對應的資料
-    $result=mysqli_query($conn,"SELECT * FROM $Table3 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file2
                                 WHERE dnum='{$_GET['additem']}' 
                                 AND username='{$_SESSION['userName']}'");
     $row = mysqli_fetch_array($result);
@@ -61,7 +61,7 @@ if(($_GET['additem'])!="")
     if($row['additem']=="0"){
           
         // 將file2的additem欄位更改為1(加入景點)
-        $sql = "UPDATE $Table3 SET additem=1
+        $sql = "UPDATE $Table_file2 SET additem=1
                 WHERE dnum='{$_GET['additem']}' 
                 AND username='{$_SESSION['userName']}'";
         mysqli_query($conn,$sql);
@@ -77,7 +77,7 @@ if(($_GET['gone'])!="")
   if($_SESSION['dst']=="0")
   {
     // 從file資料表內取和景點編號($_GET['gone'])及username對應的資料
-    $result=mysqli_query($conn,"SELECT * FROM $Table 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file
                                 WHERE dnum='{$_GET['gone']}' 
                                 AND username='{$_SESSION['userName']}'");
     $row = mysqli_fetch_array($result);
@@ -86,7 +86,7 @@ if(($_GET['gone'])!="")
     if($row['gone']=="0")
     {
       // 將file的gone欄位更改為1(標示景點已去)
-      $sql = "UPDATE $Table SET gone=1
+      $sql = "UPDATE $Table_file SET gone=1
               WHERE dnum='{$_GET['gone']}' 
               AND username='{$_SESSION['userName']}'";
       mysqli_query($conn,$sql);
@@ -96,7 +96,7 @@ if(($_GET['gone'])!="")
   else
   {
     // 從file2資料表內取和景點編號($_GET['gone'])及username對應的資料
-    $result=mysqli_query($conn,"SELECT * FROM $Table3 
+    $result=mysqli_query($conn,"SELECT * FROM $Table_file2 
                                 WHERE dnum='{$_GET['gone']}' 
                                 AND username='{$_SESSION['userName']}'");
     $row = mysqli_fetch_array($result);
@@ -104,8 +104,8 @@ if(($_GET['gone'])!="")
     // 如果景點未被使用者標示去過 
     if($row['gone']=="0")
     {
-      // 將file的gone欄位更改為1(標示景點已去)
-      $sql = "UPDATE $Table3 SET gone=1
+      // 將file2的gone欄位更改為1(標示景點已去)
+      $sql = "UPDATE $Table_file2 SET gone=1
               WHERE dnum='{$_GET['gone']}' 
               AND username='{$_SESSION['userName']}'";
       mysqli_query($conn,$sql);
@@ -183,13 +183,13 @@ if(($_GET['gone'])!="")
 // 如果點選"Taichung按鈕"// 如果點選"Taichung按鈕"
 if($_SESSION['dst']=="0")
   // 從dst資料表內取Taichung景點的資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table2 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_dst
                               WHERE dnum ='{$_GET['id']}' 
                               AND d=1"); 
 // 如果點選"Tainan按鈕"
 else
   // 取dst資料表內取Tainan景點的資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table2 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_dst
                               WHERE dnum ='{$_GET['id']}'
                               AND d=2"); 
 
@@ -219,12 +219,12 @@ echo "<div class='highlight-info'>
 // 如果點選"Taichung按鈕"
 if($_SESSION['dst']=="0")
   //從file資料表內取與username對應的資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_file 
                               WHERE username='{$_SESSION['userName']}'");
 // 如果點選"Tainan按鈕"
 else                              
   //從file2資料表內取與username對應的資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table3 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_file2
                               WHERE username='{$_SESSION['userName']}'");
   // 取每筆資料
   while($row = mysqli_fetch_array($result)){

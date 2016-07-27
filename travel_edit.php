@@ -1,7 +1,7 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="user";  // user資料表(影響：edit按鈕)
+$Table_user="user";  // user資料表(影響：edit按鈕)
 
 session_start();    // 啟動session(使用：$_SESSION['userName'])
 
@@ -9,7 +9,7 @@ session_start();    // 啟動session(使用：$_SESSION['userName'])
 if(($_GET['edit'])!="")     
 {
   // 從user資料表內取Taichung的規劃資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_user 
                               WHERE username='{$_GET['edit']}'"); 
   $row = mysqli_fetch_array($result);                 // 取每筆資料 
   $edit = ereg_replace("<br />", "", $row['edit']);   // 消除資料內的換行符號
@@ -20,7 +20,7 @@ if(($_GET['edit'])!="")
 if(($_GET['edit2'])!="")     
 {
   // 從user資料表內取Tainan的規劃資料
-  $result=mysqli_query($conn,"SELECT * FROM $Table 
+  $result=mysqli_query($conn,"SELECT * FROM $Table_user 
                               WHERE username='{$_GET['edit2']}'"); 
   $row = mysqli_fetch_array($result);                 // 取每筆資料
   $edit = ereg_replace("<br />", "", $row['edit2']);  // 消除資料內的換行符號

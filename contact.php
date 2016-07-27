@@ -1,20 +1,24 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="talk";    // 取talk資料表(影響：留言send按鈕)
+$Table_talk="talk";    // 取talk資料表(影響：留言send按鈕)
 
 // 點選"留言send"按鈕(如果名字和留言內容非空值)
 if (!empty($_POST['name']) && !empty($_POST['word']))
 {    
+  $name = $_POST['name'];   
+  $word = $_POST['word'];
+  
   date_default_timezone_set('Asia/Taipei');   //時間設定:Taipei時間 
   $now = date("Y-m-d H:i:s");                 //時間設定(年、月、日 時、分、秒)
   
-  // 新增留言
-  mysqli_query($conn,"INSERT $Table (name,word,time)
-                      VALUES ('{$_POST['name']}', '{$_POST['word']}', $now)");
+  $stmt = mysqli_prepare($conn,"INSERT $Table_talk (name,word,time)
+                                VALUES (?, ?, ?)");             //準備查詢
+  mysqli_stmt_bind_param($stmt, 'sss', $name, $word, $now);     // 指定資料類型為字串，連結參數
+  mysqli_stmt_execute($stmt);                                   // 寫入talk資料表
 }
 
-$result=mysqli_query($conn,"SELECT * FROM $Table ORDER BY num DESC");   //從talk資料表最新資料開始取
+$result=mysqli_query($conn,"SELECT * FROM $Table_talk ORDER BY num DESC");   //從talk資料表最新資料開始取
 $numwords = mysqli_num_rows($result);   //總留言數
 ?>
 

@@ -1,9 +1,9 @@
 <?php
 header('Content-type: text/html; charset=utf-8');   //使用萬用字元碼utf-8
 include_once("mysql.php");                          // 連結資料庫new
-$Table="dst";       // 取dat資料表(影響：no按鈕)
-$Table1="file";     // 取file資料表(影響：no按鈕)
-$Table2="file2";    // 取file2資料表(影響：no按鈕)
+$Table_dst="dst";       // 取dat資料表(影響：no按鈕)
+$Table_file="file";     // 取file資料表(影響：no按鈕)
+$Table_file2="file2";    // 取file2資料表(影響：no按鈕)
 
 session_start();    // 啟動session(使用：$_SESSION['userName'])
 ?>
@@ -62,17 +62,17 @@ session_start();    // 啟動session(使用：$_SESSION['userName'])
 
 <?php
 
-$row1=mysqli_num_rows(mysqli_query($conn,"SELECT * FROM $Table WHERE d=1"));    // 從dst資料夾取Taichung的景點數
-$row2=mysqli_num_rows(mysqli_query($conn,"SELECT * FROM $Table WHERE d=2"));    // 從dst資料夾取Tainan的景點數
+$row1=mysqli_num_rows(mysqli_query($conn,"SELECT * FROM $Table_dst WHERE d=1"));    // 從dst資料夾取Taichung的景點數
+$row2=mysqli_num_rows(mysqli_query($conn,"SELECT * FROM $Table_dst WHERE d=2"));    // 從dst資料夾取Tainan的景點數
 
 // 從file資料夾取去過的Taichung景點數
-$result1=mysqli_query($conn,"SELECT * FROM $Table1
+$result1=mysqli_query($conn,"SELECT * FROM $Table_file
                             WHERE username ='{$_SESSION['userName']}'
                             AND gone=1"); 
 $gone = mysqli_num_rows($result1);
 
 // 從file2資料夾取去過的Tainan景點數
-$result2=mysqli_query($conn,"SELECT * FROM $Table2
+$result2=mysqli_query($conn,"SELECT * FROM $Table_file2
                             WHERE username ='{$_SESSION['userName']}'
                             AND gone=1");                       
 $gone2 = mysqli_num_rows($result2);
