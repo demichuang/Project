@@ -260,15 +260,15 @@ else
             
             //尚未點選"see more按鈕" 
             if($_SESSION["see"]==0)     
-              echo"<p><a href='view.php?id={$row['dnum']}'>see more</a>";   //顯示"see more"按鈕
+              echo"<p><a href='view.php?see={$row['dnum']}'>see more</a>";   //顯示"see more"按鈕
             //已點選過"see more按鈕"
             else
               //判斷哪一景點按了see more按鈕
               if($row['dnum']==$_SESSION['see'])
-                echo"<p><a href='view.php?id=0'>close</a>";                   //顯示"close"按鈕
+                echo"<p><a href='view.php?see=0'>close</a>";                   //顯示"close"按鈕
               //其餘景點  
               else
-                echo"<p><a href='view.php?id={$row['dnum']}'>see more</a>";   
+                echo"<p><a href='view.php?see={$row['dnum']}'>see more</a>";   
                   
     echo    "</p>
           </figcaption>
