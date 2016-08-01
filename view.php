@@ -180,7 +180,7 @@ if(($_GET['gone'])!="")
 
 <!-- See Button click  Starts -->
 <?php
-// 如果點選"Taichung按鈕"// 如果點選"Taichung按鈕"
+// 如果點選"Taichung按鈕"
 if($_SESSION['dst']=="0")
   // 從dst資料表內取Taichung景點的資料
   $result=mysqli_query($conn,"SELECT * FROM $Table_dst
